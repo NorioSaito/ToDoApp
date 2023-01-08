@@ -1,0 +1,25 @@
+version: '3'
+services:
+  todo_app_web:
+    container_name: todo_app_web
+    build: .
+    ports:
+      - 8000:80
+      - 5173:5173
+    dns: 8.8.8.8
+    volumes:
+      - ./src/:/var/www/
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+
+  # DB
+  todo_app_db:
+    image: mysql:8.0
+    volumes:
+      - ./mysql/db:/var/lib/mysql
+      - ./database/initdb.d:/docker-entrypoint-initdb.d
+    container_name: todo_app_db
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
